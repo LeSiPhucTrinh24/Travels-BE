@@ -1,13 +1,18 @@
 package com.lspt.Travels_BE.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Getter
-@Setter
 public class ApiResponse<T> {
+    @Builder.Default
     private int code = 1000;
     private String message;
     private T result;
