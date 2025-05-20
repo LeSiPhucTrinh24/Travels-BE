@@ -1,13 +1,19 @@
 package com.lspt.Travels_BE.exception;
 
 import com.lspt.Travels_BE.dto.request.ApiResponse;
+import jakarta.validation.ConstraintViolation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.nio.file.AccessDeniedException;
+import java.util.Map;
+import java.util.Objects;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    private  static  final  String MIN_ATTRIBUTE = "min";
 
     @ExceptionHandler(value = Exception.class)
     ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception){
@@ -27,7 +33,16 @@ public class GlobalExceptionHandler {
         apiResponse.setCode(errorCode.getCode());
         apiResponse.setMessage(errorCode.getMessage());
 
-        return ResponseEntity.badRequest().body(apiResponse);
+        return ResponseEntity.status(errorCode.getStatusCode()).body(apiResponse);
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    ResponseEntity<ApiResponse> handlingAccessDeniedException(AccessDeniedException exception){
+        ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+
+        return ResponseEntity.status(errorCode.getStatusCode()).body(
+                ApiResponse.builder().code(errorCode.getCode()).message(errorCode.getMessage()).build()
+        );
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
@@ -35,10 +50,10 @@ public class GlobalExceptionHandler {
         String enumKey = exception.getFieldError().getDefaultMessage();
 
         ErrorCode errorCode = ErrorCode.INVALIID_KEY;
+
         try {
             errorCode = ErrorCode.valueOf(enumKey);
-
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e){
 
         }
 
