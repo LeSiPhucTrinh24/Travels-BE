@@ -18,13 +18,13 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = " http://localhost:5173")
 public class UserController {
     @Autowired
     private UserService userService;
 
     @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request){
+//    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request){
+    ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request){
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
         apiResponse.setResult(userService.createUser(request));
         return apiResponse;
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    ApiResponse<UserResponse> getUsser(@PathVariable String userId){
+    ApiResponse<UserResponse> getUser(@PathVariable String userId){
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getUser(userId))
                 .build();

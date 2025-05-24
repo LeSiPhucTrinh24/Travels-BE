@@ -19,7 +19,10 @@ public enum ErrorCode {
     PHONE_INVALID(1008, "Phone number is invalid",HttpStatus.BAD_REQUEST),
     FULLNAME_INVALID(1009, "FullName must be at least 6 characters",HttpStatus.BAD_REQUEST),
     DOB_PASSWORD(1010, "Age must be greater than or equal to 18",HttpStatus.BAD_REQUEST),
-
+    OLD_PASSWORD_ERROR(1011, "Old password is incorrect",HttpStatus.BAD_REQUEST),
+    NEW_AS_OLD_PASSWORD(1012, "new password same as old password",HttpStatus.BAD_REQUEST),
+    NAMETOURTYPE_EXISTED(1013, "Name tour type already existed",HttpStatus.BAD_REQUEST),
+    DESTINATIONNAME_EXISTED(1013, "destination name already existed",HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;

@@ -1,20 +1,16 @@
 package com.lspt.Travels_BE.controller;
 
-import com.lspt.Travels_BE.dto.request.ApiResponse;
-import com.lspt.Travels_BE.dto.request.AuthenticationRequest;
-import com.lspt.Travels_BE.dto.request.IntrospectRequest;
-import com.lspt.Travels_BE.dto.request.LogoutRequest;
+import com.lspt.Travels_BE.dto.request.*;
 import com.lspt.Travels_BE.dto.response.AuthenticationResponse;
 import com.lspt.Travels_BE.dto.response.IntrospectResponse;
+import com.lspt.Travels_BE.dto.response.UserResponse;
+import com.lspt.Travels_BE.entity.User;
 import com.lspt.Travels_BE.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
@@ -46,5 +42,17 @@ public class AuthenticationController {
         authenticationService.logout(request);
         return ApiResponse.<Void>builder()
                 .build();
+    }
+
+    @PostMapping("/register")
+    ApiResponse<User> register(@RequestBody RegisterRequest request) {
+        ApiResponse<User> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(authenticationService.Register(request));
+        return apiResponse;
+    }
+
+    @PutMapping("/change/{userId}")
+    User changePassword(@PathVariable String userId, @RequestBody ChangePasswordRequest request) {
+        return authenticationService.ChangePassword(userId, request);
     }
 }
