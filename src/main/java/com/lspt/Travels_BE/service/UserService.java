@@ -18,7 +18,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 
@@ -27,59 +29,93 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserService {
+
     UserReponsitory userReponsitory;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
+    UploadImageFile uploadImageFile; // Inject dịch vụ upload ảnh
 
-    public UserResponse createUser(UserCreateRequest request){
-        if(userReponsitory.existsByUserName(request.getUserName()))
+    // Tạo mới người dùng
+    public UserResponse createUser(UserCreateRequest request, MultipartFile file) {
+        if (userReponsitory.existsByUserName(request.getUserName())) {
             throw new AppException(ErrorCode.USER_EXISTED);
+        }
 
         User user = userMapper.toUser(request);
-
-        //mã hóa mật khẩu
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        //set giá trị role mặc định
-        HashSet<String> role = new HashSet<>();
-        role.add(Role.USER.name());
+        // Gán role mặc định
+        HashSet<String> roles = new HashSet<>();
+        roles.add(Role.USER.name());
+        user.setRoles(roles);
 
-        user.setRoles(role);
+        // Upload avatar nếu có file
+        if (file != null && !file.isEmpty()) {
+            try {
+                String avatarUrl = uploadImageFile.uploadImage(file);
+                user.setAvatar(avatarUrl);
+            } catch (IOException e) {
+                throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+        }
 
         return userMapper.toUserResponse(userReponsitory.save(user));
     }
 
-    public UserResponse updateUser(String userId, UserUpdateRequest request){
-        User user = userReponsitory.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+
+    // Cập nhật người dùng + avatar (nếu có)
+    public UserResponse updateUser(String userId, UserUpdateRequest request, MultipartFile file) {
+        User user = userReponsitory.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         userMapper.updateUser(user, request);
 
+        if (file != null && !file.isEmpty()) {
+            try {
+                String avatarUrl = uploadImageFile.uploadImage(file);
+                user.setAvatar(avatarUrl);
+            } catch (IOException e) {
+                log.error("Error uploading avatar", e);
+                throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
+            }
+        }
+
         return userMapper.toUserResponse(userReponsitory.save(user));
     }
 
+    // Lấy danh sách người dùng (ADMIN)
     @PreAuthorize("hasRole('ADMIN')")
-    public List<UserResponse> getUser(){
+    public List<UserResponse> getUser() {
         log.info("In method get Users");
-        return userReponsitory.findAll().stream().map(userMapper::toUserResponse).toList();
+        return userReponsitory.findAll().stream()
+                .map(userMapper::toUserResponse)
+                .toList();
     }
 
-    //user chỉ lay được thông tin của chinnh mình
+    // Lấy thông tin người dùng theo ID (chỉ nếu là chính mình)
     @PostAuthorize("returnObject.userName == authentication.name")
-    public UserResponse getUser(String userId){
+    public UserResponse getUser(String userId) {
         log.info("In method get user by userId");
-        return userMapper.toUserResponse(userReponsitory.findById(userId).orElseThrow(()-> new RuntimeException("User not found")));
+        User user = userReponsitory.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userMapper.toUserResponse(user);
     }
 
-    public  void deleteUser(String userId){
+    // Xóa người dùng
+    public void deleteUser(String userId) {
+        if (!userReponsitory.existsById(userId)) {
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
         userReponsitory.deleteById(userId);
     }
 
-    public UserResponse getMyInfo(){
+    // Lấy thông tin của chính người dùng đang đăng nhập
+    public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
-        User user = userReponsitory.findByUserName(name).orElseThrow(
-                ()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        User user = userReponsitory.findByUserName(name)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.toUserResponse(user);
     }

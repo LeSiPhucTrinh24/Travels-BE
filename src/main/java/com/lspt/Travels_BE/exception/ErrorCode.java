@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 public enum ErrorCode {
     UNCASEGORIZED_EXCEPTION(9999,"Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
-    INVALIID_KEY(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
+    INVALID_KEY(1001, "Invalid message key", HttpStatus.BAD_REQUEST),
     USER_EXISTED(1002,"User existed", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(1003, "Email must be at least 3 characters",HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(1004, "Password must be at least 6 characters",HttpStatus.BAD_REQUEST),
@@ -18,11 +18,13 @@ public enum ErrorCode {
     UNAUTHORIZED(1007,"You do not have permission", HttpStatus.FORBIDDEN),
     PHONE_INVALID(1008, "Phone number is invalid",HttpStatus.BAD_REQUEST),
     FULLNAME_INVALID(1009, "FullName must be at least 6 characters",HttpStatus.BAD_REQUEST),
-    DOB_PASSWORD(1010, "Age must be greater than or equal to 18",HttpStatus.BAD_REQUEST),
-    OLD_PASSWORD_ERROR(1011, "Old password is incorrect",HttpStatus.BAD_REQUEST),
+    DOB_PASSWORD(1015, "Age must be greater than or equal to 18",HttpStatus.BAD_REQUEST),
+    OLD_PASSWORD_ERROR(1016, "Old password is incorrect",HttpStatus.BAD_REQUEST),
     NEW_AS_OLD_PASSWORD(1012, "new password same as old password",HttpStatus.BAD_REQUEST),
     NAMETOURTYPE_EXISTED(1013, "Name tour type already existed",HttpStatus.BAD_REQUEST),
-    DESTINATIONNAME_EXISTED(1013, "destination name already existed",HttpStatus.BAD_REQUEST),
+    DESTINATIONNAME_EXISTED(1014, "destination name already existed",HttpStatus.BAD_REQUEST),
+    DOB_INVALID(1010, "Age must be greater than or equal to 18",HttpStatus.BAD_REQUEST),
+    INTERNAL_SERVER_ERROR(1011, "Internal server error", HttpStatus.INTERNAL_SERVER_ERROR)
     ;
 
     private final int code;
