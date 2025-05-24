@@ -1,5 +1,6 @@
 package com.lspt.Travels_BE.service;
 
+
 import com.lspt.Travels_BE.dto.request.AuthenticationRequest;
 import com.lspt.Travels_BE.dto.request.IntrospectRequest;
 import com.lspt.Travels_BE.dto.request.LogoutRequest;
@@ -8,8 +9,10 @@ import com.lspt.Travels_BE.dto.response.AuthenticationResponse;
 import com.lspt.Travels_BE.dto.response.IntrospectResponse;
 import com.lspt.Travels_BE.entity.InvalidatedToken;
 import com.lspt.Travels_BE.entity.User;
+import com.lspt.Travels_BE.enums.Role;
 import com.lspt.Travels_BE.exception.AppException;
 import com.lspt.Travels_BE.exception.ErrorCode;
+import com.lspt.Travels_BE.mapper.UserMapper;
 import com.lspt.Travels_BE.repository.InvalidatedTokenRepository;
 import com.lspt.Travels_BE.repository.UserReponsitory;
 import com.nimbusds.jose.*;
@@ -33,6 +36,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.StringJoiner;
 import java.util.UUID;
 
@@ -43,6 +47,7 @@ import java.util.UUID;
 public class AuthenticationService {
     UserReponsitory userReponsitory;
     InvalidatedTokenRepository invalidatedTokenRepository;
+    UserMapper userMapper;
 
     @NonFinal
     @Value("${signerKey}")
@@ -72,6 +77,8 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         var user = userReponsitory.findByUserName(request.getUserName()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        System.out.println("username: " + user.getUserName());
+        System.out.println("password: " + user.getPassword());
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -88,6 +95,38 @@ public class AuthenticationService {
                 .phone(user.getPhone())
                 .roles(user.getRoles())
                 .build();
+    }
+
+    public User Register(RegisterRequest request) {
+        User user = userMapper.toUserRegister(request);
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        HashSet<String> role = new HashSet<>();
+        role.add(Role.USER.name());
+
+        user.setRoles(role);
+
+        return userReponsitory.save(user);
+    }
+
+    public User ChangePassword(String userId, ChangePasswordRequest request) {
+        User user = userReponsitory.findById(userId)
+                .orElseThrow(()-> new RuntimeException("User not found"));
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+        if(!(passwordEncoder.matches(request.getOldPassword(), user.getPassword())))
+            throw new AppException(ErrorCode.OLD_PASSWORD_ERROR);
+
+        if(passwordEncoder.matches(request.getNewPassword(), user.getPassword()))
+            throw new AppException(ErrorCode.NEW_AS_OLD_PASSWORD);
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        // check password có trùng với password cũ không
+
+        return userReponsitory.save(user);
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
