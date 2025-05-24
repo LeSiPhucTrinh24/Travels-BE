@@ -26,6 +26,9 @@ public class SecurityConfig {
             "/auth/logout",
             "/auth/register",
             "/tourTypes"
+            "/auth/refresh",
+            "/upload/image"
+
     };
 
     @Autowired

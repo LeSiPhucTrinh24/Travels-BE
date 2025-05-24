@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -29,7 +30,6 @@ public class UserUpdateRequest {
 
     private String address;
 
-    @Size(min = 18, message = "DOB_PASSWORD")
     private LocalDate dob;
 
     private String avatar;
