@@ -9,8 +9,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,16 +20,19 @@ import java.util.List;
 @RequestMapping("/users")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = " http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreateRequest request){
-        ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-        return apiResponse;
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<UserResponse> createUser(
+            @ModelAttribute UserCreateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.createUser(request, file))
+                .build();
     }
 
     @GetMapping
@@ -49,10 +54,14 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/{userId}")
-    ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request){
+    @PutMapping(value = "/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<UserResponse> updateUser(
+            @PathVariable String userId,
+            @ModelAttribute UserUpdateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file
+    ) {
         return ApiResponse.<UserResponse>builder()
-                .result(userService.updateUser(userId, request))
+                .result(userService.updateUser(userId, request, file))
                 .build();
     }
 

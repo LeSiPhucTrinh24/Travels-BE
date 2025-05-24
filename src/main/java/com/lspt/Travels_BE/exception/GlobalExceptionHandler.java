@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
-import java.util.Map;
-import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private  static  final  String MIN_ATTRIBUTE = "min";
 
     @ExceptionHandler(value = Exception.class)
-    ResponseEntity<ApiResponse> handlingRuntimeException(RuntimeException exception){
+    ResponseEntity<ApiResponse> handlingRuntimeException(Exception exception){
         ApiResponse apiResponse = new ApiResponse();
 
         apiResponse.setCode(ErrorCode.UNCASEGORIZED_EXCEPTION.getCode());
@@ -49,7 +47,7 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse>handlingValidation(MethodArgumentNotValidException exception){
         String enumKey = exception.getFieldError().getDefaultMessage();
 
-        ErrorCode errorCode = ErrorCode.INVALIID_KEY;
+        ErrorCode errorCode = ErrorCode.INVALID_KEY;
 
         try {
             errorCode = ErrorCode.valueOf(enumKey);

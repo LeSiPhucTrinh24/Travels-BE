@@ -2,6 +2,8 @@ package com.lspt.Travels_BE.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 @Getter
 @AllArgsConstructor
@@ -22,5 +24,6 @@ public enum ErrorCode {
 
     private final int code;
     private final String message;
+    private final HttpStatusCode statusCode;
 
 }

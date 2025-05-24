@@ -1,9 +1,6 @@
 package com.lspt.Travels_BE.controller;
 
-import com.lspt.Travels_BE.dto.request.ApiResponse;
-import com.lspt.Travels_BE.dto.request.AuthenticationRequest;
-import com.lspt.Travels_BE.dto.request.IntrospectRequest;
-import com.lspt.Travels_BE.dto.request.LogoutRequest;
+import com.lspt.Travels_BE.dto.request.*;
 import com.lspt.Travels_BE.dto.response.AuthenticationResponse;
 import com.lspt.Travels_BE.dto.response.IntrospectResponse;
 import com.lspt.Travels_BE.service.AuthenticationService;
@@ -37,6 +34,15 @@ public class AuthenticationController {
     ApiResponse<IntrospectResponse> authenticate(@RequestBody IntrospectRequest request) throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder()
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
+            throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+        return ApiResponse.<AuthenticationResponse>builder()
                 .result(result)
                 .build();
     }
