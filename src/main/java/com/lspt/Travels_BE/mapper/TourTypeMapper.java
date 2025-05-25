@@ -1,5 +1,7 @@
 package com.lspt.Travels_BE.mapper;
 
+public interface TourTypeMapper {
+
 import com.lspt.Travels_BE.dto.request.RegisterRequest;
 import com.lspt.Travels_BE.dto.request.TourTypeRequest;
 import com.lspt.Travels_BE.dto.request.UserCreateRequest;
@@ -16,4 +18,5 @@ public interface TourTypeMapper {
     TourType toTourType(TourTypeRequest request);
     void updateTourType(@MappingTarget TourType tourType, TourTypeRequest request);
     TourTypeResponse toTourTypeResponse(TourType tourType);
+
 }

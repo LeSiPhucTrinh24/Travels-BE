@@ -1,5 +1,7 @@
 package com.lspt.Travels_BE.entity;
 
+public class TourType {
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,4 +24,5 @@ public class TourType {
 
     @Column(name = "tourTypeName")
     private String tourTypeName;
+
 }

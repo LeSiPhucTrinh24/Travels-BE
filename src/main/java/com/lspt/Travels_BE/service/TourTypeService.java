@@ -1,5 +1,8 @@
 package com.lspt.Travels_BE.service;
 
+
+public class TourTypeService {
+
 import com.lspt.Travels_BE.dto.request.TourTypeRequest;
 import com.lspt.Travels_BE.dto.request.UserUpdateRequest;
 import com.lspt.Travels_BE.dto.response.TourTypeResponse;

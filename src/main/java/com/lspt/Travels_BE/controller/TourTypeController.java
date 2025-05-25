@@ -1,5 +1,7 @@
 package com.lspt.Travels_BE.controller;
 
+
+public class TourTypeController {
 import com.lspt.Travels_BE.dto.request.ApiResponse;
 import com.lspt.Travels_BE.dto.request.TourTypeRequest;
 import com.lspt.Travels_BE.dto.request.UserCreateRequest;
