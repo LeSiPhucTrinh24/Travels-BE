@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreateRequest {
     @Size(min = 6, message = "FULLNAME_INVALID")
     private String fullName;

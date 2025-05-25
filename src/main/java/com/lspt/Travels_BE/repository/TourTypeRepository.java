@@ -1,4 +1,10 @@
 package com.lspt.Travels_BE.repository;
 
-public interface TourTypeRepository {
+import com.lspt.Travels_BE.entity.TourType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface TourTypeRepository extends JpaRepository<TourType, String> {
+    boolean existsByName(String name);
 }
