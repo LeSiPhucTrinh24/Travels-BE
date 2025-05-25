@@ -24,6 +24,8 @@ public class SecurityConfig {
             "/auth/login",
             "/auth/introspect",
             "/auth/logout",
+            "/auth/register",
+            "/tourTypes"
             "/auth/refresh",
             "/upload/image",
             "/tours",
