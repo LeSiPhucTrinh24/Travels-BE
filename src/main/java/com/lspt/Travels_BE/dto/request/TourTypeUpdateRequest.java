@@ -11,5 +11,5 @@ import lombok.*;
 public class TourTypeUpdateRequest {
 
     @NotBlank(message = "Name is required")
-    private String name;
+    private String tourTypeName;
 }
