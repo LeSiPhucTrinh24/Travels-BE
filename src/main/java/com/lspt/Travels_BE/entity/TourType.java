@@ -1,12 +1,7 @@
 package com.lspt.Travels_BE.entity;
 
-public class TourType {
-
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Setter
@@ -22,7 +17,6 @@ public class TourType {
     @Column(name = "tourTypeId")
     private String tourTypeId;
 
-    @Column(name = "tourTypeName")
+    @Column(name = "name")
     private String tourTypeName;
-
 }

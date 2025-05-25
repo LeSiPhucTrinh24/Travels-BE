@@ -1,10 +1,7 @@
 package com.lspt.Travels_BE.service;
 
 
-import com.lspt.Travels_BE.dto.request.AuthenticationRequest;
-import com.lspt.Travels_BE.dto.request.IntrospectRequest;
-import com.lspt.Travels_BE.dto.request.LogoutRequest;
-import com.lspt.Travels_BE.dto.request.RefreshRequest;
+import com.lspt.Travels_BE.dto.request.*;
 import com.lspt.Travels_BE.dto.response.AuthenticationResponse;
 import com.lspt.Travels_BE.dto.response.IntrospectResponse;
 import com.lspt.Travels_BE.entity.InvalidatedToken;
@@ -13,7 +10,7 @@ import com.lspt.Travels_BE.enums.Role;
 import com.lspt.Travels_BE.exception.AppException;
 import com.lspt.Travels_BE.exception.ErrorCode;
 import com.lspt.Travels_BE.mapper.UserMapper;
-import com.lspt.Travels_BE.repository.InvalidatedTokenRepository;
+import com.lspt.Travels_BE.repository.InvalidatedTokenReponsitory;
 import com.lspt.Travels_BE.repository.UserReponsitory;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -21,7 +18,6 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -46,7 +42,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
     UserReponsitory userReponsitory;
-    InvalidatedTokenRepository invalidatedTokenRepository;
+    InvalidatedTokenReponsitory invalidatedTokenReponsitory;
     UserMapper userMapper;
 
     @NonFinal
@@ -139,7 +135,7 @@ public class AuthenticationService {
             InvalidatedToken invalidatedToken =
                     InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
-            invalidatedTokenRepository.save(invalidatedToken);
+            invalidatedTokenReponsitory.save(invalidatedToken);
         } catch (AppException exception){
             log.info("Token already expired");
         }
@@ -160,7 +156,7 @@ public class AuthenticationService {
         if(!(verified && expiryTime.after(new Date())))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        if(invalidatedTokenReponsitory.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
@@ -178,7 +174,7 @@ public class AuthenticationService {
                 .expiryTime(expiryTime)
                 .build();
 
-        invalidatedTokenRepository.save(invalidatedToken);
+        invalidatedTokenReponsitory.save(invalidatedToken);
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
 

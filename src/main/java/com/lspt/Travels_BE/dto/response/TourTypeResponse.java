@@ -1,7 +1,5 @@
 package com.lspt.Travels_BE.dto.response;
 
-public class TourTypeResponse {
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
