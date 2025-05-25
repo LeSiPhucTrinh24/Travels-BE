@@ -1,7 +1,5 @@
 package com.lspt.Travels_BE.dto.response;
 
-public class TourTypeResponse {
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TourTypeResponse {
-    private String tourTypeId;
-    private String tourTypeName;
+public class DestinationResponse {
+    private String destinationId;
+    private String destinationName;
+    private String description;
 }

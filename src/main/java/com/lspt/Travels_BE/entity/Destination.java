@@ -1,7 +1,5 @@
 package com.lspt.Travels_BE.entity;
 
-public class TourType {
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,14 +13,16 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "TourType")
-public class TourType {
+@Table(name = "Destination")
+public class Destination {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "tourTypeId")
-    private String tourTypeId;
+    @Column(name = "destinationId")
+    private String destinationId;
 
-    @Column(name = "tourTypeName")
-    private String tourTypeName;
+    @Column(name = "destinationName")
+    private String destinationName;
 
+    @Column(name = "description")
+    private String description;
 }
