@@ -89,6 +89,7 @@ public class AuthenticationService {
                 .fullName(user.getFullName())
                 .address(user.getAddress())
                 .phone(user.getPhone())
+                .avatar(user.getAvatar())
                 .roles(user.getRoles())
                 .build();
     }
