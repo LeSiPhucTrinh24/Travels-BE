@@ -10,8 +10,8 @@ import com.lspt.Travels_BE.enums.Role;
 import com.lspt.Travels_BE.exception.AppException;
 import com.lspt.Travels_BE.exception.ErrorCode;
 import com.lspt.Travels_BE.mapper.UserMapper;
-import com.lspt.Travels_BE.repository.InvalidatedTokenReponsitory;
-import com.lspt.Travels_BE.repository.UserReponsitory;
+import com.lspt.Travels_BE.repository.InvalidatedTokenRepository;
+import com.lspt.Travels_BE.repository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -41,8 +41,8 @@ import java.util.UUID;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
-    UserReponsitory userReponsitory;
-    InvalidatedTokenReponsitory invalidatedTokenReponsitory;
+    UserRepository userRepository;
+    InvalidatedTokenRepository invalidatedTokenRepository;
     UserMapper userMapper;
 
     @NonFinal
@@ -71,7 +71,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        var user = userReponsitory.findByUserName(request.getUserName()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var user = userRepository.findByUserName(request.getUserName()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         System.out.println("username: " + user.getUserName());
         System.out.println("password: " + user.getPassword());
@@ -105,11 +105,11 @@ public class AuthenticationService {
 
         user.setRoles(role);
 
-        return userReponsitory.save(user);
+        return userRepository.save(user);
     }
 
     public User ChangePassword(String userId, ChangePasswordRequest request) {
-        User user = userReponsitory.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -123,7 +123,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         // check password có trùng với password cũ không
 
-        return userReponsitory.save(user);
+        return userRepository.save(user);
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
@@ -136,7 +136,7 @@ public class AuthenticationService {
             InvalidatedToken invalidatedToken =
                     InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
-            invalidatedTokenReponsitory.save(invalidatedToken);
+            invalidatedTokenRepository.save(invalidatedToken);
         } catch (AppException exception){
             log.info("Token already expired");
         }
@@ -157,7 +157,7 @@ public class AuthenticationService {
         if(!(verified && expiryTime.after(new Date())))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
-        if(invalidatedTokenReponsitory.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        if(invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         return signedJWT;
@@ -175,11 +175,11 @@ public class AuthenticationService {
                 .expiryTime(expiryTime)
                 .build();
 
-        invalidatedTokenReponsitory.save(invalidatedToken);
+        invalidatedTokenRepository.save(invalidatedToken);
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
 
-        var user = userReponsitory.findByUserName(username).orElseThrow(
+        var user = userRepository.findByUserName(username).orElseThrow(
                 () -> new AppException(ErrorCode.UNAUTHENTICATED)
         );
 

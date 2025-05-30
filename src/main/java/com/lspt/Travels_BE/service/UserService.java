@@ -8,7 +8,7 @@ import com.lspt.Travels_BE.enums.Role;
 import com.lspt.Travels_BE.exception.AppException;
 import com.lspt.Travels_BE.exception.ErrorCode;
 import com.lspt.Travels_BE.mapper.UserMapper;
-import com.lspt.Travels_BE.repository.UserReponsitory;
+import com.lspt.Travels_BE.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -30,14 +30,14 @@ import java.util.List;
 @Slf4j
 public class UserService {
 
-    UserReponsitory userReponsitory;
+    UserRepository userRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
     UploadImageFile uploadImageFile; // Inject dịch vụ upload ảnh
 
     // Tạo mới người dùng
     public UserResponse createUser(UserCreateRequest request, MultipartFile file) {
-        if (userReponsitory.existsByUserName(request.getUserName())) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
@@ -59,13 +59,13 @@ public class UserService {
             }
         }
 
-        return userMapper.toUserResponse(userReponsitory.save(user));
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
 
     // Cập nhật người dùng + avatar (nếu có)
     public UserResponse updateUser(String userId, UserUpdateRequest request, MultipartFile file) {
-        User user = userReponsitory.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         userMapper.updateUser(user, request);
@@ -80,33 +80,33 @@ public class UserService {
             }
         }
 
-        return userMapper.toUserResponse(userReponsitory.save(user));
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     // Lấy danh sách người dùng (ADMIN)
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getUser() {
         log.info("In method get Users");
-        return userReponsitory.findAll().stream()
+        return userRepository.findAll().stream()
                 .map(userMapper::toUserResponse)
                 .toList();
     }
 
     // Lấy thông tin người dùng theo ID (chỉ nếu là chính mình)
-    @PostAuthorize("returnObject.userName == authentication.name")
+    @PostAuthorize("returnObject.userName == authentication.name or hasRole('ADMIN')")
     public UserResponse getUser(String userId) {
         log.info("In method get user by userId");
-        User user = userReponsitory.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toUserResponse(user);
     }
 
     // Xóa người dùng
     public void deleteUser(String userId) {
-        if (!userReponsitory.existsById(userId)) {
+        if (!userRepository.existsById(userId)) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
-        userReponsitory.deleteById(userId);
+        userRepository.deleteById(userId);
     }
 
     // Lấy thông tin của chính người dùng đang đăng nhập
@@ -114,7 +114,7 @@ public class UserService {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
 
-        User user = userReponsitory.findByUserName(name)
+        User user = userRepository.findByUserName(name)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.toUserResponse(user);

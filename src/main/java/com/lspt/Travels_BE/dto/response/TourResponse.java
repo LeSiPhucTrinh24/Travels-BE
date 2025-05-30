@@ -24,5 +24,5 @@ public class TourResponse {
     private String coverImage;
     private String tourTypeId;
     private boolean status;
-    private boolean isFeatured;
+    private boolean featured;
 }

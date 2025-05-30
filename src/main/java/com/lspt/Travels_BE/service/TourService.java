@@ -7,7 +7,7 @@ import com.lspt.Travels_BE.entity.Tour;
 import com.lspt.Travels_BE.exception.AppException;
 import com.lspt.Travels_BE.exception.ErrorCode;
 import com.lspt.Travels_BE.mapper.TourMapper;
-import com.lspt.Travels_BE.repository.TourReponsitory;
+import com.lspt.Travels_BE.repository.TourRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,13 +24,13 @@ import java.util.List;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class TourService {
-    TourReponsitory tourReponsitory;
+    TourRepository tourRepository;
     TourMapper tourMapper;
     UploadImageFile uploadImageFile;
 
     @PreAuthorize("hasRole('ADMIN')")
     public TourResponse createTour(TourCreateRequest request, MultipartFile file){
-        if(tourReponsitory.existsByName(request.getName())){
+        if(tourRepository.existsByName(request.getName())){
             throw new AppException(ErrorCode.TOUR_EXISTED);
         }
 
@@ -45,12 +45,12 @@ public class TourService {
                 throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR);
             }
         }
-        return tourMapper.toTourResponse(tourReponsitory.save(tour));
+        return tourMapper.toTourResponse(tourRepository.save(tour));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     public TourResponse updateTour(String tourId, TourUpdateRequest request, MultipartFile file) {
-        Tour tour = tourReponsitory.findById(tourId)
+        Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour not found"));
         tourMapper.updateTour(tour, request);
 
@@ -64,28 +64,28 @@ public class TourService {
             }
 
         }
-        return tourMapper.toTourResponse(tourReponsitory.save(tour));
+        return tourMapper.toTourResponse(tourRepository.save(tour));
     }
 
     public List<TourResponse> getTour(){
         log.info("In method get Tour");
-        return tourReponsitory.findAll().stream()
+        return tourRepository.findAll().stream()
                 .map(tourMapper::toTourResponse)
                 .toList();
     }
 
     public TourResponse getTour(String tourId){
         log.info("In method get tour by tourId");
-        Tour tour = tourReponsitory.findById(tourId)
+        Tour tour = tourRepository.findById(tourId)
                 .orElseThrow(()-> new RuntimeException("Tour not found"));
         return tourMapper.toTourResponse(tour);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteTour(String tourId){
-        if(!tourReponsitory.existsById(tourId)){
+        if(!tourRepository.existsById(tourId)){
             throw new AppException(ErrorCode.TOUR_NOT_EXISTED);
         }
-        tourReponsitory.deleteById(tourId);
+        tourRepository.deleteById(tourId);
     }
 }

@@ -2,6 +2,7 @@ package com.lspt.Travels_BE.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 import java.util.Set;

@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TourReponsitory extends JpaRepository<Tour, String> {
+public interface TourRepository extends JpaRepository<Tour, String> {
     boolean existsByName(String name);
 
 }
