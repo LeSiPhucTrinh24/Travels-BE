@@ -5,6 +5,7 @@ import com.lspt.Travels_BE.dto.request.TourTypeCreateRequest;
 import com.lspt.Travels_BE.dto.request.TourTypeUpdateRequest;
 import com.lspt.Travels_BE.dto.response.TourTypeResponse;
 import com.lspt.Travels_BE.service.TourTypeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class TourTypeController {
     private TourTypeService tourTypeService;
 
     @PostMapping
-    public ApiResponse<TourTypeResponse> createTourType(TourTypeCreateRequest request){
+    public ApiResponse<TourTypeResponse> createTourType(@Valid @RequestBody TourTypeCreateRequest request){
         return ApiResponse.<TourTypeResponse>builder()
                 .result(tourTypeService.createTourType(request))
                 .build();

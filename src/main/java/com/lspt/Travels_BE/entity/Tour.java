@@ -51,8 +51,8 @@ public class Tour {
     @Column(name = "status")
     private boolean status;
 
-    @Column(name = "isFeatured")
-    private boolean isFeatured;
+    @Column(name = "featured")
+    private boolean featured;
 
 
 }

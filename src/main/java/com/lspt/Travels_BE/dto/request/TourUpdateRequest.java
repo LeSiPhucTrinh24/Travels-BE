@@ -43,6 +43,6 @@ public class TourUpdateRequest {
 
     private boolean status;
 
-    private boolean isFeatured;
+    private boolean featured;
 
 }

@@ -28,9 +28,11 @@ public class SecurityConfig {
             "/auth/refresh",
             "/upload/image",
             "/tours",
-            "/tours/**",  // Thêm này để cho phép GET /tours/{id}
+            "/tours/**",
             "/tourTypes",
             "/tourTypes/**",
+            "/booking",
+            "/booking/**",
 
 
     };
@@ -45,7 +47,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/tours", "/tours/**", "/tourTypes", "/tourTypes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tours", "/tours/**",
+                                "/tourTypes", "/tourTypes/**",
+                                "/booking", "booking/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

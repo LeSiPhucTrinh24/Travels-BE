@@ -2,7 +2,7 @@ package com.lspt.Travels_BE.configuration;
 
 import com.lspt.Travels_BE.entity.User;
 import com.lspt.Travels_BE.enums.Role;
-import com.lspt.Travels_BE.repository.UserReponsitory;
+import com.lspt.Travels_BE.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -24,9 +24,9 @@ public class ApplicationIntConfig {
     //tạo tài khoản admin
 
     @Bean
-    ApplicationRunner applicationRunner(UserReponsitory userReponsitory){
+    ApplicationRunner applicationRunner(UserRepository userRepository){
         return args -> {
-           if(userReponsitory.findByUserName("admin@gmail.com").isEmpty()){
+           if(userRepository.findByUserName("admin@gmail.com").isEmpty()){
                var roles = new HashSet<String>();
                roles.add(Role.ADMIN.name());
 
@@ -35,7 +35,7 @@ public class ApplicationIntConfig {
                        .password(passwordEncoder.encode("admin123"))
                        .roles(roles)
                        .build();
-               userReponsitory.save(user);
+               userRepository.save(user);
                log.warn("admin user has been created with default password: admin, please change it");
            }
         };
