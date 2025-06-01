@@ -27,7 +27,14 @@ public class SecurityConfig {
             "/auth/register",
             "/tourTypes",
             "/auth/refresh",
-            "/upload/image"
+            "/upload/image",
+            "/tours",
+            "/tours/**",
+            "/tourTypes",
+            "/tourTypes/**",
+            "/booking",
+            "/booking/**",
+
 
     };
 
@@ -41,6 +48,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tours", "/tours/**",
+                                "/tourTypes", "/tourTypes/**",
+                                "/booking", "booking/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

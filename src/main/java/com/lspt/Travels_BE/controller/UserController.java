@@ -28,7 +28,7 @@ public class UserController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<UserResponse> createUser(
             @ModelAttribute UserCreateRequest request,
-            @RequestPart(value = "file", required = false) MultipartFile file
+            @RequestPart(value = "file", required = false)MultipartFile file
     ) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createUser(request, file))

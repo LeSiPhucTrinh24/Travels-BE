@@ -19,9 +19,6 @@ public class UserUpdateRequest {
     @Size(min = 6, message = "FULLNAME_INVALID")
     private String fullName;
 
-    @Size(min = 6, message = "INVALID_PASSWORD")
-    private String password;
-
     @NotBlank(message = "Phone number is required")
     @Pattern(
             regexp = "^(0[3|5|7|8|9])+([0-9]{8})$",

@@ -3,9 +3,6 @@ package com.lspt.Travels_BE.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 @Entity
 @Setter
 @Getter
@@ -20,6 +17,6 @@ public class TourType {
     @Column(name = "tourTypeId")
     private String tourTypeId;
 
-    @Column(name = "tourTypeName")
+    @Column(name = "name")
     private String tourTypeName;
 }

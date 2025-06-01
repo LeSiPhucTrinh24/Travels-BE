@@ -2,6 +2,7 @@ package com.lspt.Travels_BE.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.lspt.Travels_BE.dto.response.TourImageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.util.StringUtil;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -37,6 +39,7 @@ public class UploadImageFileImpl implements UploadImageFile {
 
         return cloudinary.url().generate(StringUtils.join(publicValue, ".", extension));
     }
+
     private File convert(MultipartFile file) throws IOException {
            assert file.getOriginalFilename() != null;
         File convFile = new File(StringUtils.join(generatePublicValue(file.getOriginalFilename()), getFileName(file.getOriginalFilename())[1]));

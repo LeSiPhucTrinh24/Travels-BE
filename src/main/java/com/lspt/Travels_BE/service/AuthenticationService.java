@@ -1,10 +1,7 @@
 package com.lspt.Travels_BE.service;
 
 
-import com.lspt.Travels_BE.dto.request.AuthenticationRequest;
-import com.lspt.Travels_BE.dto.request.IntrospectRequest;
-import com.lspt.Travels_BE.dto.request.LogoutRequest;
-import com.lspt.Travels_BE.dto.request.RefreshRequest;
+import com.lspt.Travels_BE.dto.request.*;
 import com.lspt.Travels_BE.dto.response.AuthenticationResponse;
 import com.lspt.Travels_BE.dto.response.IntrospectResponse;
 import com.lspt.Travels_BE.entity.InvalidatedToken;
@@ -14,14 +11,13 @@ import com.lspt.Travels_BE.exception.AppException;
 import com.lspt.Travels_BE.exception.ErrorCode;
 import com.lspt.Travels_BE.mapper.UserMapper;
 import com.lspt.Travels_BE.repository.InvalidatedTokenRepository;
-import com.lspt.Travels_BE.repository.UserReponsitory;
+import com.lspt.Travels_BE.repository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
@@ -45,7 +41,7 @@ import java.util.UUID;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationService {
-    UserReponsitory userReponsitory;
+    UserRepository userRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     UserMapper userMapper;
 
@@ -75,7 +71,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
-        var user = userReponsitory.findByUserName(request.getUserName()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var user = userRepository.findByUserName(request.getUserName()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         System.out.println("username: " + user.getUserName());
         System.out.println("password: " + user.getPassword());
@@ -93,6 +89,7 @@ public class AuthenticationService {
                 .fullName(user.getFullName())
                 .address(user.getAddress())
                 .phone(user.getPhone())
+                .avatar(user.getAvatar())
                 .roles(user.getRoles())
                 .build();
     }
@@ -108,11 +105,11 @@ public class AuthenticationService {
 
         user.setRoles(role);
 
-        return userReponsitory.save(user);
+        return userRepository.save(user);
     }
 
     public User ChangePassword(String userId, ChangePasswordRequest request) {
-        User user = userReponsitory.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -126,7 +123,7 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         // check password có trùng với password cũ không
 
-        return userReponsitory.save(user);
+        return userRepository.save(user);
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
@@ -182,7 +179,7 @@ public class AuthenticationService {
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
 
-        var user = userReponsitory.findByUserName(username).orElseThrow(
+        var user = userRepository.findByUserName(username).orElseThrow(
                 () -> new AppException(ErrorCode.UNAUTHENTICATED)
         );
 
