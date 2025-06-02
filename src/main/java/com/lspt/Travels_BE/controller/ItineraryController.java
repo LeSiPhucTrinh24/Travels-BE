@@ -1,13 +1,9 @@
 package com.lspt.Travels_BE.controller;
 
-import com.cloudinary.Api;
 import com.lspt.Travels_BE.dto.request.ApiResponse;
-import com.lspt.Travels_BE.dto.request.DestinationRequest;
 import com.lspt.Travels_BE.dto.request.ItineraryCreateRequest;
 import com.lspt.Travels_BE.dto.request.ItineraryUpdateRequest;
-import com.lspt.Travels_BE.dto.response.DestinationResponse;
 import com.lspt.Travels_BE.dto.response.ItineraryResponse;
-import com.lspt.Travels_BE.service.DestinationService;
 import com.lspt.Travels_BE.service.ItineraryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
