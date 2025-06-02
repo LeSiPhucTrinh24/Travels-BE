@@ -1,5 +1,6 @@
 package com.lspt.Travels_BE.dto.response;
 
+import com.lspt.Travels_BE.entity.TourType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,4 +26,5 @@ public class TourResponse {
     private String tourTypeId;
     private boolean status;
     private boolean featured;
+    private String destination;
 }

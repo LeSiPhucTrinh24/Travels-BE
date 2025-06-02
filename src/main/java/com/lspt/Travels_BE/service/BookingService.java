@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class BookingService {
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public BookingResponse updateBooking(String bookingId, BookingUpdateRequest request){
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
@@ -43,6 +44,8 @@ public class BookingService {
                 .map(bookingMapper::toBookingResponse)
                 .toList();
     }
+
+    @Transactional(readOnly = true)
     public BookingResponse getBooking(String bookingId){
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(()-> new RuntimeException("Booking not found"));

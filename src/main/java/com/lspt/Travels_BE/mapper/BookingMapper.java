@@ -8,7 +8,7 @@ import com.lspt.Travels_BE.entity.Booking;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {TourMapper.class})
 public interface BookingMapper {
     Booking toBooking(BookingCreateRequest request);
     void updateBooking(@MappingTarget Booking booking, BookingUpdateRequest request);

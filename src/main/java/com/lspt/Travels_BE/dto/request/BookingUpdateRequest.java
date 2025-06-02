@@ -15,6 +15,6 @@ import java.time.LocalDateTime;
 @Builder
 public class BookingUpdateRequest {
 
-    private boolean status;
+    private int status;
 
 }

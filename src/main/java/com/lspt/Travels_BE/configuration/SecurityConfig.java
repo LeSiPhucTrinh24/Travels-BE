@@ -33,6 +33,8 @@ public class SecurityConfig {
             "/tourTypes/**",
             "/booking",
             "/booking/**",
+            "/itineraries",
+            "/itineraries/**",
 
 
     };
