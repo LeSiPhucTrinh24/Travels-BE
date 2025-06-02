@@ -36,7 +36,9 @@ public enum ErrorCode {
     TOURTYPE_NOT_EXISTED(1025,"TourType not existed", HttpStatus.NOT_FOUND),
     BOOKING_NOT_EXISTED(1026,"Booking not existed", HttpStatus.NOT_FOUND),
     TOURIMAGE_NOT_EXISTED(1027,"TourImage not existed", HttpStatus.NOT_FOUND),
-    INVALID_FILE(1028, "INVALID_FILE", HttpStatus.BAD_REQUEST)
+    INVALID_FILE(1028, "INVALID_FILE", HttpStatus.BAD_REQUEST),
+    ITINERARY_NOT_EXISTED(1029,"Itinerary not existed", HttpStatus.NOT_FOUND),
+
     ;
 
     private final int code;

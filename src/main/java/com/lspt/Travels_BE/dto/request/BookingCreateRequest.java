@@ -29,5 +29,5 @@ public class BookingCreateRequest {
     @NotNull(message = "Ngày đặt không được để trống")
     private LocalDateTime bookingDate;
 
-    private boolean status;
+    private int status;
 }
