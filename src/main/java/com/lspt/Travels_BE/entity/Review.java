@@ -1,8 +1,8 @@
 package com.lspt.Travels_BE.entity;
 
 import com.lspt.Travels_BE.enums.ReviewStatus;
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 

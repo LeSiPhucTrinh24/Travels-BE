@@ -1,5 +1,4 @@
 package com.lspt.Travels_BE.dto.request;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

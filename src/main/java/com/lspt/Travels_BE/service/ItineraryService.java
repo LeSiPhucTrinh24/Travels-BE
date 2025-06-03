@@ -66,7 +66,6 @@ public class ItineraryService {
     public ItineraryResponse updateItinerary(String itineraryId, ItineraryUpdateRequest request){
         Itinerary itinerary = itineraryRepository.findById(itineraryId)
                 .orElseThrow(()-> new RuntimeException("Itinerary not found"));
-
         List<Itinerary> existingItineraries = itineraryRepository.findAllByTourIdAndDestinationId(
                 itinerary.getTourId(), itinerary.getDestinationId());
 
@@ -85,25 +84,26 @@ public class ItineraryService {
                     .map(String::valueOf)
                     .collect(Collectors.toList())));
         }
-
         itineraryMapper.updateItinerary(itinerary, request);
 
         return itineraryMapper.toItineraryResponse(itineraryRepository.save(itinerary));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<ItineraryResponse> getItineraries(){
-        return itineraryRepository.findAllByOrderByTourIdAscDestinationIdAscDayNumberAsc().stream()
+    public List<ItineraryResponse> getItinerary(){
+        return itineraryRepository.findAll().stream()
                 .map(itineraryMapper::toItineraryResponse)
                 .toList();
     }
-
-    public void deleteItinerary(String itineraryId){
-        itineraryRepository.deleteById(itineraryId);
+  
+    public ItineraryResponse getItinerary(String itineraryId){
+        Itinerary itinerary = itineraryRepository.findById(itineraryId)
+                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+        return itineraryMapper.toItineraryResponse(itinerary);
     }
 
-    public ItineraryResponse getItinerary(String itineraryId){
-        return itineraryMapper.toItineraryResponse(itineraryRepository.findById(itineraryId)
-                .orElseThrow(()-> new RuntimeException("Itinerary not found")));
+    public void deleteItinerary(String itineraryId){
+        if(!itineraryRepository.existsById(itineraryId))
+            throw new AppException(ErrorCode.ITINERARY_NOT_EXISTED);
+        itineraryRepository.deleteById(itineraryId);
     }
 }

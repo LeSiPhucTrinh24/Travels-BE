@@ -28,5 +28,13 @@ public class Booking {
 
     private LocalDateTime bookingDate;
 
-    private  boolean status;
+    private int status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tourId", insertable = false, updatable = false)
+    private  Tour tour;
 }

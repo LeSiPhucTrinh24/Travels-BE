@@ -12,8 +12,10 @@ import lombok.NoArgsConstructor;
 public class ItineraryResponse {
     private String itineraryId;
     private String tourId;
-    private int dayNumber;
     private String dayTitle;
     private String description;
+    private int dayNumber;
+
+    private DestinationResponse destination;
     private String destinationId;
 }

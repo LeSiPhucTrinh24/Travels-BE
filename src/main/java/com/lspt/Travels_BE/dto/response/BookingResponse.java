@@ -18,5 +18,8 @@ public class BookingResponse {
     private int numberOfPeople;
     private double totalPrice;
     private LocalDateTime bookingDate;
-    private  boolean status;
+    private  int status;
+
+    private UserResponse user;
+    private TourResponse tour;
 }

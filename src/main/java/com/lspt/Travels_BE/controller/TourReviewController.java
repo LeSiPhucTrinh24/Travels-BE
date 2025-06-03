@@ -1,5 +1,4 @@
 package com.lspt.Travels_BE.controller;
-
 import com.lspt.Travels_BE.dto.request.ApiResponse;
 import com.lspt.Travels_BE.dto.request.TourReviewCreateRequest;
 import com.lspt.Travels_BE.dto.response.TourReviewResponse;
@@ -52,7 +51,6 @@ public class TourReviewController {
                 .result(tourReviewService.updateReviewStatus(reviewId, trangThai))
                 .build();
     }
-
     @PutMapping("/reviews/{reviewId}")
     public ApiResponse<TourReviewResponse> updateReview(
             @PathVariable String reviewId,

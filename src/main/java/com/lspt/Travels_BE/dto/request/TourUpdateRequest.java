@@ -45,4 +45,6 @@ public class TourUpdateRequest {
 
     private boolean featured;
 
+    @NotBlank(message = "destination is required")
+    private String destination;
 }
