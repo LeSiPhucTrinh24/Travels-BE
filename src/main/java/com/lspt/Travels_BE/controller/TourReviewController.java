@@ -48,10 +48,17 @@ public class TourReviewController {
     public ApiResponse<TourReviewResponse> updateReviewStatus(
             @PathVariable String reviewId,
             @RequestParam String trangThai) {
-        System.out.println("trạng thái: " + trangThai);
-        System.out.println("trạng thái: ");
         return ApiResponse.<TourReviewResponse>builder()
                 .result(tourReviewService.updateReviewStatus(reviewId, trangThai))
+                .build();
+    }
+
+    @PutMapping("/reviews/{reviewId}")
+    public ApiResponse<TourReviewResponse> updateReview(
+            @PathVariable String reviewId,
+            @RequestBody TourReviewCreateRequest request) {
+        return ApiResponse.<TourReviewResponse>builder()
+                .result(tourReviewService.updateReview(reviewId, request))
                 .build();
     }
 }
