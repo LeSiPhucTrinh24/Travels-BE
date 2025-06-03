@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 public class ItineraryController {
-
     @Autowired
     private ItineraryService itineraryService;
 
@@ -29,18 +28,15 @@ public class ItineraryController {
                 .result(itineraryService.createItinerary(request))
                 .build();
     }
-
+  
+    @GetMapping
+    ApiResponse<List<ItineraryResponse>> getItineraries() {
+        return ApiResponse.<List<ItineraryResponse>>builder()
+                .result(itineraryService.getItineraries())
     @PutMapping("/{itineraryId}")
     public ApiResponse<ItineraryResponse> updateItinerary(@PathVariable String itineraryId, @RequestBody ItineraryUpdateRequest request){
         return ApiResponse.<ItineraryResponse>builder()
                 .result(itineraryService.updateItinerary(itineraryId, request))
-                .build();
-    }
-
-    @GetMapping
-    ApiResponse<List<ItineraryResponse>> getItinerary(){
-        return ApiResponse.<List<ItineraryResponse>>builder()
-                .result(itineraryService.getItinerary())
                 .build();
     }
 
@@ -51,11 +47,18 @@ public class ItineraryController {
                 .build();
     }
 
+    @PutMapping("/{itineraryId}")
+    ApiResponse<ItineraryResponse> updateItinerary(@PathVariable String itineraryId, @RequestBody ItineraryUpdateRequest request) {
+        return ApiResponse.<ItineraryResponse>builder()
+                .result(itineraryService.updateItinerary(itineraryId, request))
+                .build();
+    }
+
     @DeleteMapping("/{itineraryId}")
-    ApiResponse<String> deleteItinerary(@PathVariable String itineraryId){
+    ApiResponse<String> deleteItinerary(@PathVariable String itineraryId) {
         itineraryService.deleteItinerary(itineraryId);
         return ApiResponse.<String>builder()
-                .result("Itinerary has been delate")
+                .result("Itinerary has been delete")
                 .build();
     }
 }

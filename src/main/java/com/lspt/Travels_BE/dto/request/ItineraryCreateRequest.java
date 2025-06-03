@@ -1,11 +1,12 @@
 package com.lspt.Travels_BE.dto.request;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
+import java.time.LocalDate;
 @Setter
 @Getter
 @AllArgsConstructor

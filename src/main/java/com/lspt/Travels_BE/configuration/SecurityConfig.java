@@ -25,6 +25,7 @@ public class SecurityConfig {
             "/auth/introspect",
             "/auth/logout",
             "/auth/register",
+            "/tourTypes",
             "/auth/refresh",
             "/upload/image",
             "/tours",
@@ -35,7 +36,6 @@ public class SecurityConfig {
             "/booking/**",
             "/itineraries",
             "/itineraries/**",
-
 
     };
 
