@@ -34,7 +34,7 @@ public class Booking {
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tourId", insertable = false, updatable = false)
     private  Tour tour;
 }

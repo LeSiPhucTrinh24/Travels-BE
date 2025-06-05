@@ -26,9 +26,12 @@ public class BookingService {
     BookingRepository bookingRepository;
     BookingMapper bookingMapper;
 
-    public BookingResponse createBooking(BookingCreateRequest request){
+    public BookingResponse createBooking(BookingCreateRequest request) {
         Booking booking = bookingMapper.toBooking(request);
-        return bookingMapper.toBookingResponse(bookingRepository.save(booking));
+        Booking savedBooking = bookingRepository.save(booking);
+        Booking fetchedBooking = bookingRepository.findById(savedBooking.getBookingId())
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        return bookingMapper.toBookingResponse(fetchedBooking);
     }
 
 
@@ -41,6 +44,7 @@ public class BookingService {
 
     public List<BookingResponse> getBooking(){
         return bookingRepository.findAll().stream()
+                .sorted((a, b) -> b.getBookingDate().compareTo(a.getBookingDate()))
                 .map(bookingMapper::toBookingResponse)
                 .toList();
     }
@@ -49,12 +53,14 @@ public class BookingService {
     public BookingResponse getBooking(String bookingId){
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(()-> new RuntimeException("Booking not found"));
+        booking.getTour().getLocation();
         return bookingMapper.toBookingResponse(booking);
     }
 
     public List<BookingResponse> getBookingsByUserId(String userId) {
         List<Booking> bookings = bookingRepository.findAllByUserId(userId);
         return bookings.stream()
+                .sorted((a, b) -> b.getBookingDate().compareTo(a.getBookingDate()))
                 .map(bookingMapper::toBookingResponse)
                 .toList();
     }
