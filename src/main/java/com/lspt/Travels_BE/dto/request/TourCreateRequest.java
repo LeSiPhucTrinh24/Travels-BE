@@ -45,7 +45,7 @@ public class TourCreateRequest {
 
     private boolean featured;
 
-    @NotBlank(message = "destination is required")
-    private String destination;
+    @NotBlank(message = "location is required")
+    private String location;
 
 }

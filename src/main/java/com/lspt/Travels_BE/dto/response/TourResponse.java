@@ -26,5 +26,5 @@ public class TourResponse {
     private String tourTypeId;
     private boolean status;
     private boolean featured;
-    private String destination;
+    private String location;
 }

@@ -54,7 +54,7 @@ public class Tour {
     @Column(name = "featured")
     private boolean featured;
 
-    @Column(name = "destination")
-    private String destination;
+    @Column(name = "location")
+    private String location;
 
 }
