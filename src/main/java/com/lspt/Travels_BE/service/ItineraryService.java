@@ -39,7 +39,7 @@ public class ItineraryService {
     }
 
     public List<ItineraryResponse> getItinerary(){
-        return itineraryRepository.findAll().stream()
+        return itineraryRepository.findAllByOrderByTourIdAscDestinationIdAscDayNumberAsc().stream()
                 .map(itineraryMapper::toItineraryResponse)
                 .toList();
     }

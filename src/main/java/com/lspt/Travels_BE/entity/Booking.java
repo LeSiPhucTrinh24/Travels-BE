@@ -3,6 +3,7 @@ package com.lspt.Travels_BE.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
@@ -26,11 +27,14 @@ public class Booking {
 
     private double totalPrice;
 
+    @Column(name = "departureDate")
+    private LocalDate departureDate;
+
     private LocalDateTime bookingDate;
 
     private int status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 

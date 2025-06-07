@@ -7,6 +7,7 @@ import com.lspt.Travels_BE.entity.Tour;
 import com.lspt.Travels_BE.entity.User;
 import com.lspt.Travels_BE.enums.ReviewStatus;
 import com.lspt.Travels_BE.mapper.TourReviewMapper;
+import com.lspt.Travels_BE.repository.BookingRepository;
 import com.lspt.Travels_BE.repository.TourRepository;
 import com.lspt.Travels_BE.repository.TourReviewRepository;
 import com.lspt.Travels_BE.repository.UserRepository;
@@ -39,12 +40,21 @@ public class TourReviewService {
     @Autowired
     private TourReviewMapper tourReviewMapper;
 
+    @Autowired
+    private BookingRepository bookingRepository;
+
     public TourReviewResponse createReview(TourReviewCreateRequest request) {
         // Kiểm tra tour và user có tồn tại không
         Tour tour = tourRepository.findById(request.getTourId())
                 .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại"));
+
+        boolean hasBooked = bookingRepository.existsByUserIdAndTourId(
+                request.getUserId(), request.getTourId());
+        if (!hasBooked) {
+            throw new RuntimeException("Bạn phải tham gia và hoàn thành tour này trước khi đánh giá");
+        }
 
         Review review = tourReviewMapper.toReview(request);
         review.setReviewDate(LocalDateTime.now());

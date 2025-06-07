@@ -33,9 +33,6 @@ public class Tour {
     @Column(name = "duration")
     private int duration;
 
-    @Column(name = "departureDate")
-    private LocalDate departureDate;
-
     @Column(name = "departureLocation")
     private String departureLocation;
 

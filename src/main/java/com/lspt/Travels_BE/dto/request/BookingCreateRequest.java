@@ -1,11 +1,10 @@
 package com.lspt.Travels_BE.dto.request;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
@@ -25,6 +24,9 @@ public class BookingCreateRequest {
 
     @Positive(message = "Tổng giá phải lớn hơn 0")
     private double totalPrice;
+
+    @Future(message = "Ngày khởi hành phải lớn hơn ngày hiện tại")
+    private LocalDate departureDate;
 
     @NotNull(message = "Ngày đặt không được để trống")
     private LocalDateTime bookingDate;

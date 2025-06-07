@@ -9,10 +9,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {TourMapper.class})
+@Mapper(componentModel = "spring", uses = {TourMapper.class, UserMapper.class})
 public interface BookingMapper {
+
     Booking toBooking(BookingCreateRequest request);
+
     void updateBooking(@MappingTarget Booking booking, BookingUpdateRequest request);
+
     @Mapping(source = "tour", target = "tour")
+    @Mapping(source = "user", target = "user")
     BookingResponse toBookingResponse(Booking booking);
 }
+
