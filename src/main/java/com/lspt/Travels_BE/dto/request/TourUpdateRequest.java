@@ -27,9 +27,6 @@ public class TourUpdateRequest {
     @Min(value = 1, message = "Duration must be at least 1 day")
     private int duration;
 
-    @Future(message = "Departure date must be in the future")
-    private LocalDate departureDate;
-
     @NotBlank(message = "Departure location is required")
     private String departureLocation;
 

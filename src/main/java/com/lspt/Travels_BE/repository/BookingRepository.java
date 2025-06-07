@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, String> {
     @EntityGraph(attributePaths = {"tour"})
     List<Booking> findAllByUserId(String userId);
-    @EntityGraph(attributePaths = {"tour"})
-    Optional<Booking> findById(String bookingId);
+    boolean existsByUserIdAndTourId(String userId, String tourId);
 }

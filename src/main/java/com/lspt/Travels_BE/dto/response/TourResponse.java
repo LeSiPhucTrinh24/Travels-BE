@@ -19,7 +19,6 @@ public class TourResponse {
     private String description;
     private double price;
     private int duration;
-    private LocalDate departureDate;
     private String departureLocation;
     private int maxPeople;
     private String coverImage;
